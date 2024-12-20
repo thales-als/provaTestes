@@ -87,7 +87,7 @@ class CharBufferTest {
         CharBuffer source = CharBuffer.wrap(TestCharSequences.HELLO.getValue());
         buffer.put(source);
         buffer.flip();
-        assertEquals('H', buffer.get(), "The first character in the buffer should be 'H'");
+        assertEquals('H', buffer.get());
     }
 
     @Test
@@ -95,22 +95,22 @@ class CharBufferTest {
         String str = TestCharSequences.HELLO.getValue();
         buffer.put(str);
         buffer.flip();
-        assertEquals('H', buffer.get(), "The first character in the buffer should be 'H'");
+        assertEquals('H', buffer.get());
     }
 
     @Test
     void shouldPutSubstringIntoBufferWithOffset() {
         String str = "Hello, World!";
-        buffer.put(str, 7, 12); // Puts "World" into the buffer
+        buffer.put(str, 7, 12);
         buffer.flip();
-        assertEquals('W', buffer.get(), "The first character in the buffer should be 'W'");
+        assertEquals('W', buffer.get());
     }
 
     @Test
     void shouldReturnCorrectLengthOfBuffer() {
         buffer.put(TestCharSequences.HELLO.getValue());
-        buffer.flip(); // Switches the buffer to read mode
-        assertEquals(5, buffer.length(), "The buffer length should be 5");
+        buffer.flip();
+        assertEquals(5, buffer.length());
     }
 
     @Test

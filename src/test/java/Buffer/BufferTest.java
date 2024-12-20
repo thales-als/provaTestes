@@ -6,12 +6,12 @@ import org.junit.jupiter.api.*;
 
 class BufferTest {
 
-    private Buffer bufferTamanho0, bufferTamanho10, bufferAlocacaoDireta;
+    private Buffer bufferSize0, bufferSize10, bufferDirectAllocation;
 
     private enum BufferSize {
-        TAMANHO_ZERO(ByteBuffer.allocate(0)),
-        TAMANHO_DEZ(ByteBuffer.allocate(10)),
-        ALOCACAO_DIRETA(ByteBuffer.allocateDirect(0));
+        SIZE_ZERO(ByteBuffer.allocate(0)),
+        SIZE_TEN(ByteBuffer.allocate(10)),
+        DIRECT_ALLOCATION(ByteBuffer.allocateDirect(0));
 
         private final Buffer buffer;
 
@@ -25,121 +25,121 @@ class BufferTest {
     }
 
     @BeforeEach
-    void setupBefore() {
-        bufferTamanho0 = BufferSize.TAMANHO_ZERO.getBuffer();
-        bufferTamanho10 = BufferSize.TAMANHO_DEZ.getBuffer();
-        bufferAlocacaoDireta = BufferSize.ALOCACAO_DIRETA.getBuffer();
+    void setupBeforeEachTest() {
+        bufferSize0 = BufferSize.SIZE_ZERO.getBuffer();
+        bufferSize10 = BufferSize.SIZE_TEN.getBuffer();
+        bufferDirectAllocation = BufferSize.DIRECT_ALLOCATION.getBuffer();
     }
 
     @AfterEach
-    void setupAfter() {
-        bufferTamanho0.clear();
-        bufferTamanho10.clear();
+    void cleanupAfterEachTest() {
+        bufferSize0.clear();
+        bufferSize10.clear();
     }
 
     @Test
-    void deveRetornarArrayNaoNuloQuandoMetodoArrayForChamado() {
-        assertNotNull(bufferTamanho0.array());
+    void shouldReturnNonNullArrayWhenArrayMethodIsCalled() {
+        assertNotNull(bufferSize0.array());
     }
 
     @Test
-    void deveRetornarOffsetZeroQuandoMetodoArrayOffsetForChamado() {
-        assertEquals(0, bufferTamanho0.arrayOffset());
+    void shouldReturnZeroOffsetWhenArrayOffsetMethodIsCalled() {
+        assertEquals(0, bufferSize0.arrayOffset());
     }
 
     @Test
-    void deveRetornarZeroDeCapacidadeQuandoMetodoCapacityForChamado() {
-        assertEquals(0, bufferTamanho0.capacity());
+    void shouldReturnZeroCapacityWhenCapacityMethodIsCalled() {
+        assertEquals(0, bufferSize0.capacity());
     }
 
     @Test
-    void deveRetornarValoresPadraoAposExecucaoDoMetodoClear() {
-        bufferTamanho0.clear();
-        assertEquals(0, bufferTamanho0.capacity());
-        assertEquals(bufferTamanho0.capacity(), bufferTamanho0.limit());
+    void shouldReturnDefaultValuesAfterClearMethodExecution() {
+        bufferSize0.clear();
+        assertEquals(0, bufferSize0.capacity());
+        assertEquals(bufferSize0.capacity(), bufferSize0.limit());
     }
 
     @Test
-    void deveAlterarPosicaoELimiteAposExecucaoDoMetodoFlip() {
-        bufferTamanho0.flip();
-        assertEquals(bufferTamanho0.position(), bufferTamanho0.limit());
-        assertEquals(0, bufferTamanho0.position());
+    void shouldChangePositionAndLimitAfterFlipMethodExecution() {
+        bufferSize0.flip();
+        assertEquals(bufferSize0.position(), bufferSize0.limit());
+        assertEquals(0, bufferSize0.position());
     }
 
     @Test
-    void deveConfirmarSeBufferPossuiArrayQuandoMetodoHasArrayForChamado() {
-        assertTrue(bufferTamanho0.hasArray());
+    void shouldConfirmBufferHasArrayWhenHasArrayMethodIsCalled() {
+        assertTrue(bufferSize0.hasArray());
     }
 
     @Test
-    void deveRetornarTrueQuandoMetodoHasRemainingConfirmarEspacosDisponiveis() {
-        boolean comportamento = bufferTamanho10.position() < bufferTamanho10.limit();
-        assertEquals(bufferTamanho10.hasRemaining(), comportamento);
+    void shouldReturnTrueWhenHasRemainingConfirmsAvailableSpaces() {
+        boolean condition = bufferSize10.position() < bufferSize10.limit();
+        assertEquals(bufferSize10.hasRemaining(), condition);
     }
 
     @Test
-    void deveConfirmarSeBufferEDeAlocacaoDireta() {
-        assertTrue(bufferAlocacaoDireta.isDirect());
+    void shouldConfirmBufferIsDirectlyAllocated() {
+        assertTrue(bufferDirectAllocation.isDirect());
     }
 
     @Test
-    void deveRetornarFalseQuandoMetodoIsReadOnlyForChamadoNumBufferQueNaoEhReadOnly() {
-        assertFalse(bufferTamanho0.isReadOnly());
+    void shouldReturnFalseWhenIsReadOnlyMethodIsCalledOnNonReadOnlyBuffer() {
+        assertFalse(bufferSize0.isReadOnly());
     }
 
     @Test
-    void deveRetornarZeroQuandoMetodoLimitForChamadoNoBufferTamanhoZero() {
-        assertEquals(0, bufferTamanho0.limit());
+    void shouldReturnZeroWhenLimitMethodIsCalledOnZeroSizeBuffer() {
+        assertEquals(0, bufferSize0.limit());
     }
 
     @Test
-    void deveAlterarLimiteDoBufferQuandoMetodoLimitComNovoLimiteForChamado() {
-        int novoLimite = 5;
-        bufferTamanho10.limit(novoLimite);
-        assertEquals(novoLimite, bufferTamanho10.limit());
-        assertThrows(IllegalArgumentException.class, () -> bufferTamanho10.limit(-1));
-        assertThrows(IllegalArgumentException.class, () -> bufferTamanho10.limit(bufferTamanho10.capacity() + 1));
+    void shouldChangeBufferLimitWhenLimitMethodWithNewLimitIsCalled() {
+        int newLimit = 5;
+        bufferSize10.limit(newLimit);
+        assertEquals(newLimit, bufferSize10.limit());
+        assertThrows(IllegalArgumentException.class, () -> bufferSize10.limit(-1));
+        assertThrows(IllegalArgumentException.class, () -> bufferSize10.limit(bufferSize10.capacity() + 1));
     }
 
     @Test
-    void deveManterUltimaPosicaoMarcadaAposReset() {
-        bufferTamanho10.position(5).mark();
-        assertEquals(bufferTamanho10.reset().position(), bufferTamanho10.position());
+    void shouldMaintainLastMarkedPositionAfterReset() {
+        bufferSize10.position(5).mark();
+        assertEquals(bufferSize10.reset().position(), bufferSize10.position());
 
-        bufferTamanho10.position(2).mark();
-        assertEquals(bufferTamanho10.reset().position(), bufferTamanho10.position());
+        bufferSize10.position(2).mark();
+        assertEquals(bufferSize10.reset().position(), bufferSize10.position());
     }
 
     @Test
-    void deveRetornarZeroQuandoMetodoPositionForChamadoNoBufferTamanhoZero() {
-        assertEquals(0, bufferTamanho0.position());
+    void shouldReturnZeroWhenPositionMethodIsCalledOnZeroSizeBuffer() {
+        assertEquals(0, bufferSize0.position());
     }
 
     @Test
-    void deveAlterarPosicaoDoBufferQuandoMetodoPositionComNovaPosicaoForChamado() {
-        int novaPosicao = 5;
-        bufferTamanho10.position(novaPosicao);
-        assertEquals(novaPosicao, bufferTamanho10.position());
+    void shouldChangeBufferPositionWhenPositionMethodWithNewPositionIsCalled() {
+        int newPosition = 5;
+        bufferSize10.position(newPosition);
+        assertEquals(newPosition, bufferSize10.position());
     }
 
     @Test
-    void deveRetornarRemainingPositivoQuandoMetodoRemainingForChamado() {
-        assertTrue(bufferTamanho0.remaining() >= 0);
+    void shouldReturnPositiveRemainingWhenRemainingMethodIsCalled() {
+        assertTrue(bufferSize0.remaining() >= 0);
     }
 
     @Test
-    void deveRestaurarPosicaoAnteriorAoMarkQuandoMetodoResetForChamado() {
-        bufferTamanho10.position(5).mark();
-        bufferTamanho10.position(8);
-        bufferTamanho10.reset();
+    void shouldRestorePositionToMarkedPositionWhenResetMethodIsCalled() {
+        bufferSize10.position(5).mark();
+        bufferSize10.position(8);
+        bufferSize10.reset();
 
-        assertEquals(5, bufferTamanho10.position());
+        assertEquals(5, bufferSize10.position());
     }
 
     @Test
-    void deveRestaurarPosicaoParaZeroQuandoMetodoRewindForChamado() {
-        bufferTamanho10.position(5).mark();
-        bufferTamanho10.rewind();
-        assertEquals(0, bufferTamanho10.position());
+    void shouldResetPositionToZeroWhenRewindMethodIsCalled() {
+        bufferSize10.position(5).mark();
+        bufferSize10.rewind();
+        assertEquals(0, bufferSize10.position());
     }
 }
