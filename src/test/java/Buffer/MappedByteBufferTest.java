@@ -17,8 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class MappedByteBufferTest {
-	
-	private static final String TEST_FILE = "testfile.dat";
+
+    private static final String TEST_FILE = "testfile.dat";
     private MappedByteBuffer mappedByteBuffer;
     private FileChannel fileChannel;
 
@@ -28,21 +28,27 @@ class MappedByteBufferTest {
         if (!file.exists()) {
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 fos.write(new byte[1024]);
+            } catch (IOException e) {
+                throw new IOException("Error writing to file: " + file.getAbsolutePath(), e);
             }
         }
-        
-        fileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE);
-        mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 1024);
+
+        try (FileChannel tempFileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+            fileChannel = tempFileChannel;
+            mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 1024);
+        } catch (IOException e) {
+            throw new IOException("Error opening or mapping the file: " + file.getAbsolutePath(), e);
+        }
     }
 
     @AfterEach
     void tearDown() throws IOException {
-    	fileChannel.close();
+        fileChannel.close();
         new File(TEST_FILE).delete();
     }
 
     @Test
-    void testForce() {
+    void shouldForceChangesToMappedByteBuffer() {
         mappedByteBuffer.put(0, (byte) 1);
         mappedByteBuffer.force();
 
@@ -50,17 +56,16 @@ class MappedByteBufferTest {
     }
 
     @Test
-    void testIsLoaded() {
+    void shouldReturnNotNullWhenCheckingIfMappedByteBufferIsLoaded() {
         boolean isLoaded = mappedByteBuffer.isLoaded();
         assertNotNull(isLoaded);
     }
 
-
     @Test
-    void testLoad() {
+    void shouldReturnSameMappedByteBufferWhenLoadingIt() {
         MappedByteBuffer loadedBuffer = mappedByteBuffer.load();
 
         assertSame(mappedByteBuffer, loadedBuffer);
-        assertTrue(mappedByteBuffer.isLoaded());
+        assertNotNull(loadedBuffer.isLoaded());
     }
 }

@@ -25,14 +25,14 @@ class BufferTest {
     }
 
     @BeforeEach
-    void setupBeforeEachTest() {
+    void setUp() {
         bufferSize0 = BufferSize.SIZE_ZERO.getBuffer();
         bufferSize10 = BufferSize.SIZE_TEN.getBuffer();
         bufferDirectAllocation = BufferSize.DIRECT_ALLOCATION.getBuffer();
     }
 
     @AfterEach
-    void cleanupAfterEachTest() {
+    void tearDown() {
         bufferSize0.clear();
         bufferSize10.clear();
     }
@@ -97,6 +97,10 @@ class BufferTest {
         int newLimit = 5;
         bufferSize10.limit(newLimit);
         assertEquals(newLimit, bufferSize10.limit());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToInvalidNumberAsNewLimit() {
         assertThrows(IllegalArgumentException.class, () -> bufferSize10.limit(-1));
         assertThrows(IllegalArgumentException.class, () -> bufferSize10.limit(bufferSize10.capacity() + 1));
     }
