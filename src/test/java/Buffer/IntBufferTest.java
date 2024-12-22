@@ -6,69 +6,69 @@ import org.junit.jupiter.api.*;
 
 class IntBufferTest {
 
-	private IntBuffer buffer1;
-	private IntBuffer buffer2;
-	private IntBuffer buffer3;
+	private IntBuffer sourceBuffer;
+	private IntBuffer emptyBuffer;
+	private IntBuffer destinationBuffer;
 
 	@BeforeEach
 	void setUp() {
-		buffer1 = IntBuffer.wrap(new int[]{1, 2, 3});
-		buffer2 = IntBuffer.allocate(3);
-		buffer3 = IntBuffer.wrap(new int[]{4, 5, 6});
+		sourceBuffer = IntBuffer.wrap(new int[]{1, 2, 3});
+		emptyBuffer = IntBuffer.allocate(3);
+		destinationBuffer = IntBuffer.wrap(new int[]{4, 5, 6});
 	}
 
 	@AfterEach
 	void tearDown() {
-		buffer1.clear();
-		buffer2.clear();
-		buffer3.clear();
+		sourceBuffer.clear();
+		emptyBuffer.clear();
+		destinationBuffer.clear();
 	}
 
 	@Test
 	void shouldCompareBuffersWithEqualContent() {
-		buffer2.put(buffer1);
-		assertEquals(0, buffer1.compareTo(buffer2));
+		emptyBuffer.put(sourceBuffer);
+		assertEquals(0, sourceBuffer.compareTo(emptyBuffer));
 	}
 
 	@Test
 	void shouldCompareBuffersWithDifferentContent() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertTrue(buffer1.compareTo(buffer3) < 0);
-		assertTrue(buffer3.compareTo(buffer1) > 0);
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertTrue(sourceBuffer.compareTo(destinationBuffer) < 0);
+		assertTrue(destinationBuffer.compareTo(sourceBuffer) > 0);
 	}
 
 	@Test
 	void shouldThrowExceptionWhenComparingWithNullBuffer() {
-		assertThrows(NullPointerException.class, () -> buffer1.compareTo(null));
+		assertThrows(NullPointerException.class, () -> sourceBuffer.compareTo(null));
 	}
 
 	@Test
 	void shouldPutAnotherIntBufferIntoBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1, buffer2.get());
-		assertEquals(2, buffer2.get());
-		assertEquals(3, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1, emptyBuffer.get());
+		assertEquals(2, emptyBuffer.get());
+		assertEquals(3, emptyBuffer.get());
 	}
 
 	@Test
 	void shouldThrowExceptionWhenPuttingSameBufferIntoItself() {
-		assertThrows(IllegalArgumentException.class, () -> buffer1.put(buffer1));
+		assertThrows(IllegalArgumentException.class, () -> sourceBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
 		IntBuffer sourceBuffer = IntBuffer.wrap(new int[]{7, 8, 9, 10});
-		assertThrows(BufferOverflowException.class, () -> buffer2.put(sourceBuffer));
+		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldPutIntsFromAnotherBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1, buffer2.get());
-		assertEquals(2, buffer2.get());
-		assertEquals(3, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1, emptyBuffer.get());
+		assertEquals(2, emptyBuffer.get());
+		assertEquals(3, emptyBuffer.get());
 	}
 }

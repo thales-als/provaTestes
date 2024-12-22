@@ -6,69 +6,69 @@ import org.junit.jupiter.api.*;
 
 class LongBufferTest {
 
-	private LongBuffer buffer1;
-	private LongBuffer buffer2;
-	private LongBuffer buffer3;
+	private LongBuffer sourceBuffer;
+	private LongBuffer emptyBuffer;
+	private LongBuffer destinationBuffer;
 
 	@BeforeEach
 	void setUp() {
-		buffer1 = LongBuffer.wrap(new long[]{1L, 2L, 3L});
-		buffer2 = LongBuffer.allocate(3);
-		buffer3 = LongBuffer.wrap(new long[]{4L, 5L, 6L});
+		sourceBuffer = LongBuffer.wrap(new long[]{1L, 2L, 3L});
+		emptyBuffer = LongBuffer.allocate(3);
+		destinationBuffer = LongBuffer.wrap(new long[]{4L, 5L, 6L});
 	}
 
 	@AfterEach
 	void tearDown() {
-		buffer1.clear();
-		buffer2.clear();
-		buffer3.clear();
+		sourceBuffer.clear();
+		emptyBuffer.clear();
+		destinationBuffer.clear();
 	}
 
 	@Test
 	void shouldCompareBuffersWithEqualContent() {
-		buffer2.put(buffer1);
-		assertEquals(0, buffer1.compareTo(buffer2));
+		emptyBuffer.put(sourceBuffer);
+		assertEquals(0, sourceBuffer.compareTo(emptyBuffer));
 	}
 
 	@Test
 	void shouldCompareBuffersWithDifferentContent() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertTrue(buffer1.compareTo(buffer3) < 0);
-		assertTrue(buffer3.compareTo(buffer1) > 0);
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertTrue(sourceBuffer.compareTo(destinationBuffer) < 0);
+		assertTrue(destinationBuffer.compareTo(sourceBuffer) > 0);
 	}
 
 	@Test
 	void shouldThrowExceptionWhenComparingWithNullBuffer() {
-		assertThrows(NullPointerException.class, () -> buffer1.compareTo(null));
+		assertThrows(NullPointerException.class, () -> sourceBuffer.compareTo(null));
 	}
 
 	@Test
 	void shouldPutAnotherLongBufferIntoBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1L, buffer2.get());
-		assertEquals(2L, buffer2.get());
-		assertEquals(3L, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1L, emptyBuffer.get());
+		assertEquals(2L, emptyBuffer.get());
+		assertEquals(3L, emptyBuffer.get());
 	}
 
 	@Test
 	void shouldThrowExceptionWhenPuttingSameBufferIntoItself() {
-		assertThrows(IllegalArgumentException.class, () -> buffer1.put(buffer1));
+		assertThrows(IllegalArgumentException.class, () -> sourceBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
 		LongBuffer sourceBuffer = LongBuffer.wrap(new long[]{7L, 8L, 9L, 10L});
-		assertThrows(BufferOverflowException.class, () -> buffer2.put(sourceBuffer));
+		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldPutLongsFromAnotherBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1L, buffer2.get());
-		assertEquals(2L, buffer2.get());
-		assertEquals(3L, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1L, emptyBuffer.get());
+		assertEquals(2L, emptyBuffer.get());
+		assertEquals(3L, emptyBuffer.get());
 	}
 }

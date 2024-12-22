@@ -6,69 +6,69 @@ import org.junit.jupiter.api.*;
 
 class FloatBufferTest {
 
-	private FloatBuffer buffer1;
-	private FloatBuffer buffer2;
-	private FloatBuffer buffer3;
+	private FloatBuffer sourceBuffer;
+	private FloatBuffer emptyBuffer;
+	private FloatBuffer destinationBuffer;
 
 	@BeforeEach
 	void setUp() {
-		buffer1 = FloatBuffer.wrap(new float[]{1.0f, 2.0f, 3.0f});
-		buffer2 = FloatBuffer.allocate(3);
-		buffer3 = FloatBuffer.wrap(new float[]{4.0f, 5.0f, 6.0f});
+		sourceBuffer = FloatBuffer.wrap(new float[]{1.0f, 2.0f, 3.0f});
+		emptyBuffer = FloatBuffer.allocate(3);
+		destinationBuffer = FloatBuffer.wrap(new float[]{4.0f, 5.0f, 6.0f});
 	}
 
 	@AfterEach
 	void tearDown() {
-		buffer1.clear();
-		buffer2.clear();
-		buffer3.clear();
+		sourceBuffer.clear();
+		emptyBuffer.clear();
+		destinationBuffer.clear();
 	}
 
 	@Test
 	void shouldCompareBuffersWithEqualContent() {
-		buffer2.put(buffer1);
-		assertEquals(0, buffer1.compareTo(buffer2));
+		emptyBuffer.put(sourceBuffer);
+		assertEquals(0, sourceBuffer.compareTo(emptyBuffer));
 	}
 
 	@Test
 	void shouldCompareBuffersWithDifferentContent() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertTrue(buffer1.compareTo(buffer3) < 0);
-		assertTrue(buffer3.compareTo(buffer1) > 0);
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertTrue(sourceBuffer.compareTo(destinationBuffer) < 0);
+		assertTrue(destinationBuffer.compareTo(sourceBuffer) > 0);
 	}
 
 	@Test
 	void shouldThrowExceptionWhenComparingWithNullBuffer() {
-		assertThrows(NullPointerException.class, () -> buffer1.compareTo(null));
+		assertThrows(NullPointerException.class, () -> sourceBuffer.compareTo(null));
 	}
 
 	@Test
 	void shouldPutAnotherFloatBufferIntoBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1.0f, buffer2.get());
-		assertEquals(2.0f, buffer2.get());
-		assertEquals(3.0f, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1.0f, emptyBuffer.get());
+		assertEquals(2.0f, emptyBuffer.get());
+		assertEquals(3.0f, emptyBuffer.get());
 	}
 
 	@Test
 	void shouldThrowExceptionWhenPuttingSameBufferIntoItself() {
-		assertThrows(IllegalArgumentException.class, () -> buffer1.put(buffer1));
+		assertThrows(IllegalArgumentException.class, () -> sourceBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
 		FloatBuffer sourceBuffer = FloatBuffer.wrap(new float[]{7.0f, 8.0f, 9.0f, 10.0f});
-		assertThrows(BufferOverflowException.class, () -> buffer2.put(sourceBuffer));
+		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldPutFloatsFromAnotherBufferCorrectly() {
-		buffer2.put(buffer1);
-		buffer2.flip();
-		assertEquals(1.0f, buffer2.get());
-		assertEquals(2.0f, buffer2.get());
-		assertEquals(3.0f, buffer2.get());
+		emptyBuffer.put(sourceBuffer);
+		emptyBuffer.flip();
+		assertEquals(1.0f, emptyBuffer.get());
+		assertEquals(2.0f, emptyBuffer.get());
+		assertEquals(3.0f, emptyBuffer.get());
 	}
 }
