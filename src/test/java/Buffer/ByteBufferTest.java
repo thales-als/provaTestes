@@ -18,7 +18,7 @@ class ByteBufferTest {
         ByteBufferSize(ByteBuffer byteBuffer) {
             this.byteBuffer = byteBuffer;
         }
-
+        
         public ByteBuffer getByteBuffer() {
             return byteBuffer;
         }

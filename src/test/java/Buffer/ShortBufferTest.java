@@ -49,7 +49,6 @@ class ShortBufferTest {
 		emptyBuffer.put(sourceBuffer);
 		emptyBuffer.flip();
 
-		// Test if elements from buffer1 are correctly placed in buffer2
 		assertEquals(1, emptyBuffer.get());
 		assertEquals(2, emptyBuffer.get());
 		assertEquals(3, emptyBuffer.get());
@@ -57,23 +56,12 @@ class ShortBufferTest {
 
 	@Test
 	void shouldThrowExceptionWhenPuttingSameBufferIntoItself() {
-		// Test if putting the same buffer into itself throws the appropriate exception
 		assertThrows(IllegalArgumentException.class, () -> sourceBuffer.put(sourceBuffer));
 	}
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
-		ShortBuffer sourceBuffer = ShortBuffer.wrap(new short[]{7, 8, 9, 10});
+		sourceBuffer = ShortBuffer.wrap(new short[]{7, 8, 9, 10});
 		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
-	}
-
-	@Test
-	void shouldPutShortsFromAnotherBufferCorrectly() {
-		emptyBuffer.put(sourceBuffer);
-		emptyBuffer.flip();
-
-		assertEquals(1, emptyBuffer.get());
-		assertEquals(2, emptyBuffer.get());
-		assertEquals(3, emptyBuffer.get());
 	}
 }

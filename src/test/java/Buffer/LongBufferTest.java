@@ -59,16 +59,7 @@ class LongBufferTest {
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
-		LongBuffer sourceBuffer = LongBuffer.wrap(new long[]{7L, 8L, 9L, 10L});
+		sourceBuffer = LongBuffer.wrap(new long[]{7L, 8L, 9L, 10L});
 		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
-	}
-
-	@Test
-	void shouldPutLongsFromAnotherBufferCorrectly() {
-		emptyBuffer.put(sourceBuffer);
-		emptyBuffer.flip();
-		assertEquals(1L, emptyBuffer.get());
-		assertEquals(2L, emptyBuffer.get());
-		assertEquals(3L, emptyBuffer.get());
 	}
 }

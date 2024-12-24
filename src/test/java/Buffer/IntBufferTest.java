@@ -59,16 +59,7 @@ class IntBufferTest {
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
-		IntBuffer sourceBuffer = IntBuffer.wrap(new int[]{7, 8, 9, 10});
+		sourceBuffer = IntBuffer.wrap(new int[]{7, 8, 9, 10});
 		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
-	}
-
-	@Test
-	void shouldPutIntsFromAnotherBufferCorrectly() {
-		emptyBuffer.put(sourceBuffer);
-		emptyBuffer.flip();
-		assertEquals(1, emptyBuffer.get());
-		assertEquals(2, emptyBuffer.get());
-		assertEquals(3, emptyBuffer.get());
 	}
 }

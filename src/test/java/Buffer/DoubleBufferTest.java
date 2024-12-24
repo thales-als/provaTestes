@@ -59,16 +59,7 @@ class DoubleBufferTest {
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
-		DoubleBuffer sourceBuffer = DoubleBuffer.wrap(new double[]{7.0, 8.0, 9.0, 10.0});
+		sourceBuffer = DoubleBuffer.wrap(new double[]{7.0, 8.0, 9.0, 10.0});
 		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
-	}
-
-	@Test
-	void shouldPutDoublesFromAnotherBufferCorrectly() {
-		emptyBuffer.put(sourceBuffer);
-		emptyBuffer.flip();
-		assertEquals(1.0, emptyBuffer.get());
-		assertEquals(2.0, emptyBuffer.get());
-		assertEquals(3.0, emptyBuffer.get());
 	}
 }

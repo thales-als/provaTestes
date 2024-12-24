@@ -59,16 +59,7 @@ class FloatBufferTest {
 
 	@Test
 	void shouldThrowExceptionWhenSourceBufferIsTooLarge() {
-		FloatBuffer sourceBuffer = FloatBuffer.wrap(new float[]{7.0f, 8.0f, 9.0f, 10.0f});
+		sourceBuffer = FloatBuffer.wrap(new float[]{7.0f, 8.0f, 9.0f, 10.0f});
 		assertThrows(BufferOverflowException.class, () -> emptyBuffer.put(sourceBuffer));
-	}
-
-	@Test
-	void shouldPutFloatsFromAnotherBufferCorrectly() {
-		emptyBuffer.put(sourceBuffer);
-		emptyBuffer.flip();
-		assertEquals(1.0f, emptyBuffer.get());
-		assertEquals(2.0f, emptyBuffer.get());
-		assertEquals(3.0f, emptyBuffer.get());
 	}
 }
